@@ -1,6 +1,7 @@
 <?php
 namespace aki\vue;
 
+use inquid\google_debugger\GoogleCloudLogger;
 use Yii;
 /**
  * @author akbar joudi <akbar.joody@gmail.com>
@@ -28,6 +29,16 @@ class Vue extends \yii\base\Widget
      * @var Array
      */
     public $methods;
+
+    /**
+     * 'filters' => [
+     *  'reverseMessage' => new yii\web\JsExpression("function(){"
+     *      . "this.message =1; "
+     *      . "}"),
+     *  ]
+     * @var Array
+     */
+    public $filters;
     
     /**
      *
@@ -126,6 +137,7 @@ class Vue extends \yii\base\Widget
     public function renderVuejs() {
         $data = $this->generateData();
         $methods = $this->generateMethods();
+        $filters = $this->generateFilters();
         $watch = $this->generateWatch();
         $computed = $this->generateComputed();
         $el = $this->id;
@@ -135,6 +147,7 @@ class Vue extends \yii\base\Widget
                 ".(!empty($this->template) ? "template :'".$this->template."'," :null)."
                 ".(!empty($data) ? "data :".$data.",":null)."
                 ".(!empty($methods) ? "methods :".$methods."," :null)."
+                ".(!empty($filters) ? "filters :".$filters."," :null)."
                 ".(!empty($watch) ? "watch :".$watch."," :null)."
                 ".(!empty($computed) ? "computed :".$computed."," :null)."
                 ".(!empty($this->beforeCreate) ? "beforeCreate :".$this->beforeCreate->expression."," :null)."
@@ -149,6 +162,7 @@ class Vue extends \yii\base\Widget
                 ".(!empty($this->deactivated) ? "deactivated :".$this->deactivated->expression."," :null)."
             }); 
         ";
+        Yii::debug($js,GoogleCloudLogger::ORDENES_LOG);
         Yii::$app->view->registerJs($js, \yii\web\View::POS_END);
     }
     
@@ -169,8 +183,19 @@ class Vue extends \yii\base\Widget
             return "{".$str."}";
         }
     }
-    
-    
+
+    public function generateFilters() {
+        if(is_array($this->filters) && !empty($this->filters)){
+            $str = '';
+            foreach ($this->filters as $key => $value) {
+                if($value instanceof \yii\web\JsExpression){
+                    $str.= $key.":".$value->expression;
+                }
+            }
+            return "{".$str."}";
+        }
+    }
+
     public function generateWatch() {
         if(is_array($this->watch) && !empty($this->watch)){
             $str = '';
