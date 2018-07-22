@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "inquid\\vue\\": "yii2-vue"
+            "inquid\\vue\\": "src"
         }
     }
 }
