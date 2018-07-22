@@ -13,7 +13,8 @@
     "require": {
         "yiisoft/yii2": "*",
         "bower-asset/vue": "*",
-        "bower-asset/axios" : "*"
+        "bower-asset/axios" : "*",
+        "inquid/yii2-google-debugger": "*"
     },
     "autoload": {
         "psr-4": {
