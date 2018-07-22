@@ -16,7 +16,7 @@ php composer.phar require inquid/yii2-vue "*"
 or add
 
 ```
-"aki/yii2-vue": "*"
+"inquid/yii2-vue": "*"
 ```
 
 to the require section of your `composer.json` file.
