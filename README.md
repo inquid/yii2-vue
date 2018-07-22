@@ -10,7 +10,7 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require aki/yii2-vue "*"
+php composer.phar require inquid/yii2-vue "*"
 ```
 
 or add
@@ -29,7 +29,7 @@ Once the extension is installed, simply use it in your code by  :
 
 ```php
 <?php
-use aki\vue\Vue;
+use inquid\vue\Vue;
 ?>
 <?php Vue::begin([
     'id' => "vue-app",
