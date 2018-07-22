@@ -1,5 +1,5 @@
 <?php
-namespace aki\vue;
+namespace inquid\vue;
 
 /**
  * Description of VueAsset

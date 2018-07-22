@@ -1,5 +1,5 @@
 <?php
-namespace aki\vue;
+namespace inquid\vue;
 
 use inquid\google_debugger\GoogleCloudLogger;
 use Yii;
