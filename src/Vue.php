@@ -1,7 +1,6 @@
 <?php
 namespace inquid\vue;
 
-use inquid\google_debugger\GoogleCloudLogger;
 use Yii;
 /**
  * @author akbar joudi <akbar.joody@gmail.com>
@@ -162,7 +161,7 @@ class Vue extends \yii\base\Widget
                 ".(!empty($this->deactivated) ? "deactivated :".$this->deactivated->expression."," :null)."
             }); 
         ";
-        Yii::debug($js,GoogleCloudLogger::ORDENES_LOG);
+        Yii::debug($js);
         Yii::$app->view->registerJs($js, \yii\web\View::POS_END);
     }
     
