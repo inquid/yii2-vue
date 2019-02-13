@@ -17,7 +17,7 @@ class Vue extends \yii\base\Widget
     /**
     *   template
     */
-    public $templete;
+    public $template;
     
     /**
      * 'methods' => [
