@@ -14,6 +14,6 @@ class VueAsset extends \yii\web\AssetBundle{
     
     public function init()
     {
-        $this->js[] = YII_ENV_DEV ? 'vue.js' : 'vue.min.js';
+        $this->js[] = YII_ENV == "dev" ? 'vue.js' : 'vue.min.js';
     }
 }
