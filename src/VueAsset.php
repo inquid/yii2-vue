@@ -9,8 +9,7 @@ namespace inquid\vue;
 class VueAsset extends \yii\web\AssetBundle{
     public $sourcePath = '@bower/vue/dist';
     
-    public $js = [
-    ];
+    public $js = [];
     
     public function init()
     {
