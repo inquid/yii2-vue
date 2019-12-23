@@ -6,7 +6,8 @@ namespace inquid\vue;
  *
  * @author akbar joudi <akbar.joody@gmail.com>
  */
-class VueAsset extends \yii\web\AssetBundle{
+class VueAsset extends \yii\web\AssetBundle
+{
     public $baseUrl = 'https://cdn.jsdelivr.net/npm/vue/dist/';
     
     public $js = [];
