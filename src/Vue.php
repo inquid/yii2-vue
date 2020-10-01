@@ -115,6 +115,7 @@ class Vue extends \yii\base\Widget
     public function init() {
         $this->view->registerAssetBundle(VueAsset::className());
         $this->view->registerAssetBundle(AxiosAsset::className());
+        $this->view->registerAssetBundle(VueFormGeneratorAsset::className());
     }
     
     public static function begin($config = array()) {
