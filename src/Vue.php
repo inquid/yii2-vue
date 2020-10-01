@@ -2,6 +2,7 @@
 namespace inquid\vue;
 
 use Yii;
+
 /**
  * @author akbar joudi <akbar.joody@gmail.com>
  */
@@ -13,12 +14,12 @@ class Vue extends \yii\base\Widget
      * @var Array
      */
     public $data;
-    
+
     /**
     *   template
     */
     public $template;
-    
+
     /**
      * 'methods' => [
      *  'reverseMessage' => new yii\web\JsExpression("function(){"
@@ -30,6 +31,14 @@ class Vue extends \yii\base\Widget
     public $methods;
 
     /**
+     * 'components' => [
+     *      ['name' => 'component'],
+     *  ]
+     * @var Array
+     */
+    public $components;
+
+    /**
      * 'filters' => [
      *  'reverseMessage' => new yii\web\JsExpression("function(){"
      *      . "this.message =1; "
@@ -38,13 +47,13 @@ class Vue extends \yii\base\Widget
      * @var Array
      */
     public $filters;
-    
+
     /**
      *
-     * @var Array 
-     */ 
+     * @var Array
+     */
     public $watch;
-    
+
     /**
      *
      * @var Array
@@ -117,29 +126,31 @@ class Vue extends \yii\base\Widget
         $this->view->registerAssetBundle(AxiosAsset::className());
         $this->view->registerAssetBundle(VueFormGeneratorAsset::className());
     }
-    
+
     public static function begin($config = array()) {
         $obj =  parent::begin($config);
         echo '<div id="'.$obj->id.'">';
         return $obj;
     }
-    
-    
+
+
     public static function end() {
         echo '</div>';
         return parent::end();
     }
-    
+
     public function run() {
-        return $this->renderVuejs();       
+        return $this->renderVuejs();
     }
-    
+
     public function renderVuejs() {
         $data = $this->generateData();
         $methods = $this->generateMethods();
         $filters = $this->generateFilters();
+        $components = $this->generateComponents();
         $watch = $this->generateWatch();
         $computed = $this->generateComputed();
+        // TODO fix components
         $el = $this->id;
         $js = "
             var {$this->jsName} = new Vue({
@@ -160,18 +171,22 @@ class Vue extends \yii\base\Widget
                 ".(!empty($this->destroyed) ? "destroyed :".$this->destroyed->expression."," :null)."
                 ".(!empty($this->activated) ? "activated :".$this->activated->expression."," :null)."
                 ".(!empty($this->deactivated) ? "deactivated :".$this->deactivated->expression."," :null)."
+                components: {
+                    \"vue-form-generator\": VueFormGenerator.component
+                },
             }); 
         ";
         Yii::debug($js);
+        Yii::debug('components '.json_encode($this->generateComponents()));
         Yii::$app->view->registerJs($js, \yii\web\View::POS_END);
     }
-    
+
     public function generateData() {
         if(!empty($this->data)){
             return json_encode($this->data);
         }
     }
-  
+
     public function generateMethods() {
         if(is_array($this->methods) && !empty($this->methods)){
             $str = '';
@@ -196,6 +211,18 @@ class Vue extends \yii\base\Widget
         }
     }
 
+    /**
+     * Get the components to include in the app.
+     *
+     * @return string
+     */
+    public function generateComponents()
+    {
+        if(!empty($this->components)){
+            return json_encode($this->components);
+        }
+    }
+
     public function generateWatch() {
         if(is_array($this->watch) && !empty($this->watch)){
             $str = '';
@@ -207,7 +234,7 @@ class Vue extends \yii\base\Widget
             return "{".$str."}";
         }
     }
-    
+
     public function generateComputed() {
         if(is_array($this->computed) && !empty($this->computed)){
             $str = '';
@@ -219,7 +246,7 @@ class Vue extends \yii\base\Widget
             return "{".$str."}";
         }
     }
-    
+
     public function component($tagName, $option) {
         $option = json_encode($option);
         $this->view->registerJs("
