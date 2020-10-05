@@ -12,7 +12,7 @@ class BasePlugin implements PluginContract
      */
     public function getName(): string
     {
-        return 'Print Plugin';
+        return 'Base Plugin';
     }
 
     /**
