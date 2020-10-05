@@ -210,7 +210,7 @@ class Vue extends \yii\base\Widget
             $str = '';
             foreach ($this->methods as $key => $value) {
                 if ($value instanceof \yii\web\JsExpression) {
-                    $str .= $key . ":" . $value->expression . ',';
+                    $str .= $key . ":" . $value->expression . (substr($value->expression, 1) == ',' ?: '');
                 }
             }
             $str = rtrim($str,',');
@@ -225,7 +225,7 @@ class Vue extends \yii\base\Widget
             $str = '';
             foreach ($this->filters as $key => $value) {
                 if ($value instanceof \yii\web\JsExpression) {
-                    $str .= $key . ":" . $value->expression . ',';
+                    $str .= $key . ":" . $value->expression . (substr($value->expression, 1) == ',' ?: '');
                 }
             }
             $str = rtrim($str,',');
@@ -252,7 +252,7 @@ class Vue extends \yii\base\Widget
             $str = '';
             foreach ($this->watch as $key => $value) {
                 if ($value instanceof \yii\web\JsExpression) {
-                    $str .= $key . ":" . $value->expression . ',';
+                    $str .= $key . ":" . $value->expression . (substr($value->expression, 1) == ',' ?: '');
                 }
             }
             $str = rtrim($str,',');
@@ -267,7 +267,7 @@ class Vue extends \yii\base\Widget
             $str = '';
             foreach ($this->computed as $key => $value) {
                 if ($value instanceof \yii\web\JsExpression) {
-                    $str .= $key . ":" . $value->expression . ',';
+                    $str .= $key . ":" . $value->expression . (substr($value->expression, 1) == ',' ?: '');
                 }
             }
             $str = rtrim($str,',');
