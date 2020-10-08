@@ -63,7 +63,8 @@ interface PluginContract
     /**
      * Code to be executed when the result is being sent to the server.
      *
+     * @param array $request the request to be processed.
      * @return bool
      */
-    public function processServerSideCode(): bool;
+    public function processServerSideCode(array $request): bool;
 }
