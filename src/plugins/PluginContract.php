@@ -6,8 +6,16 @@ namespace inquid\vue\plugins;
 interface PluginContract
 {
     /**
+     * The id of the plugin to be identifiable programatically.
+     *
+     * @return string
+     */
+    public function getId(): string;
+
+    /**
      * Returns the name of the plugin.
      *
+     * @return string
      */
     public function getName(): string;
 
@@ -20,6 +28,9 @@ interface PluginContract
 
     /**
      * Get the methods for the vue application.
+     *
+     * Some of the variables stored in the shared Variables file
+     * can be concatenated or overwritten to change functionality.
      *
      * @return array
      */
