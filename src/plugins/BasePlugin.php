@@ -7,8 +7,15 @@ namespace inquid\vue\plugins;
 class BasePlugin implements PluginContract
 {
     /**
-     * Returns the name of the plugin.
-     *
+     * {@inheritDoc}
+     */
+    public function getId(): string
+    {
+        return 'base_plugin';
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function getName(): string
     {
