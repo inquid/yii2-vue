@@ -128,9 +128,11 @@ class Vue extends \yii\base\Widget
 
     public function init()
     {
-        $this->view->registerAssetBundle(VueAsset::className());
-        $this->view->registerAssetBundle(AxiosAsset::className());
-        $this->view->registerAssetBundle(VueFormGeneratorAsset::className());
+        $this->view->registerAssetBundle(VueAsset::class);
+        $this->view->registerAssetBundle(AxiosAsset::class);
+        $this->view->registerAssetBundle(VueFormGeneratorAsset::class);
+        $this->view->registerAssetBundle(VueBootstrapAsset::class);
+
     }
 
     public static function begin($config = array(), BasePluginProvider $pluginProvider = null)
@@ -169,6 +171,7 @@ class Vue extends \yii\base\Widget
         // TODO fix components
         $el = $this->id;
         $js = "
+            Vue.use(BootstrapVue);
             var {$this->jsName} = new Vue({
                 el: '#" . $el . "',
                 " . (!empty($this->template) ? "template :'" . $this->template . "'," : null) . "
