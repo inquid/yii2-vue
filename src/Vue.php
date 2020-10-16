@@ -4,13 +4,27 @@ namespace inquid\vue;
 
 use inquid\vue\plugins\BasePluginProvider;
 use Yii;
+use yii\base\Widget;
+use yii\web\JsExpression;
+use yii\web\View;
+
+Yii::setAlias('@vueroot', dirname(__FILE__));
 
 /**
  * @author akbar joudi <akbar.joody@gmail.com>
  */
-class Vue extends \yii\base\Widget
+class Vue extends Widget
 {
+    /**
+     * @var string
+     */
     public $jsName = 'app';
+
+    /**
+     * @see VueRouter
+     */
+    public $vueRouter;
+
     /**
      *
      * @var Array
@@ -64,61 +78,61 @@ class Vue extends \yii\base\Widget
 
     /**
      *
-     * @var \yii\web\JsExpression
+     * @var JsExpression
      */
     public $beforeCreate;
 
     /**
      *
-     * @var \yii\web\JsExpression
+     * @var JsExpression
      */
     public $created;
 
     /**
      *
-     * @var \yii\web\JsExpression
+     * @var JsExpression
      */
     public $beforeMount;
 
     /**
      *
-     * @var \yii\web\JsExpression
+     * @var JsExpression
      */
     public $mounted;
 
     /**
      *
-     * @var \yii\web\JsExpression
+     * @var JsExpression
      */
     public $beforeUpdate;
 
     /**
      *
-     * @var \yii\web\JsExpression
+     * @var JsExpression
      */
     public $updated;
 
     /**
      *
-     * @var \yii\web\JsExpression
+     * @var JsExpression
      */
     public $activated;
 
     /**
      *
-     * @var \yii\web\JsExpression
+     * @var JsExpression
      */
     public $deactivated;
 
     /**
      *
-     * @var \yii\web\JsExpression
+     * @var JsExpression
      */
     public $beforeDestroy;
 
     /**
      *
-     * @var \yii\web\JsExpression
+     * @var JsExpression
      */
     public $destroyed;
 
@@ -132,6 +146,10 @@ class Vue extends \yii\base\Widget
         $this->view->registerAssetBundle(AxiosAsset::class);
         $this->view->registerAssetBundle(VueFormGeneratorAsset::class);
         $this->view->registerAssetBundle(VueBootstrapAsset::class);
+        if($this->vueRouter)
+        {
+            $this->view->registerAssetBundle(VueRouterAsset::className());
+        }
 
     }
 
@@ -168,13 +186,13 @@ class Vue extends \yii\base\Widget
         $components = $this->generateComponents();
         $watch = $this->generateWatch();
         $computed = $this->generateComputed();
-        // TODO fix components
         $el = $this->id;
         $js = "
-            Vue.use(BootstrapVue);
+            ".(($this->vueRouter) ? $this->vueRouter:null)."
             var {$this->jsName} = new Vue({
                 el: '#" . $el . "',
                 " . (!empty($this->template) ? "template :'" . $this->template . "'," : null) . "
+                " . (!empty($components) ? "components :" . $components . "," : null) . "
                 " . (!empty($data) ? "data :" . $data . "," : null) . "
                 " . (!empty($methods) ? "methods :" . $methods . "," : null) . "
                 " . (!empty($filters) ? "filters :" . $filters . "," : null) . "
@@ -197,7 +215,7 @@ class Vue extends \yii\base\Widget
         ";
         Yii::debug($js);
         Yii::debug('components ' . json_encode($this->generateComponents()));
-        Yii::$app->view->registerJs($js, \yii\web\View::POS_END);
+        Yii::$app->view->registerJs($js, View::POS_END);
     }
 
     public function generateData()
@@ -212,7 +230,7 @@ class Vue extends \yii\base\Widget
         if (is_array($this->methods) && !empty($this->methods)) {
             $str = '';
             foreach ($this->methods as $key => $value) {
-                if ($value instanceof \yii\web\JsExpression) {
+                if ($value instanceof JsExpression) {
                     $str .= $key . ":" . $value->expression . (substr($value->expression, 1) == ',' ?: '');
                 }
             }
@@ -227,7 +245,7 @@ class Vue extends \yii\base\Widget
         if (is_array($this->filters) && !empty($this->filters)) {
             $str = '';
             foreach ($this->filters as $key => $value) {
-                if ($value instanceof \yii\web\JsExpression) {
+                if ($value instanceof JsExpression) {
                     $str .= $key . ":" . $value->expression . (substr($value->expression, 1) == ',' ?: '');
                 }
             }
@@ -242,19 +260,29 @@ class Vue extends \yii\base\Widget
      *
      * @return string
      */
-    public function generateComponents()
-    {
-        if (!empty($this->components)) {
-            return json_encode($this->components);
+    public function generateComponents() {
+        if(!empty($this->components))
+        {
+            $components='';
+            for ($i=0; $i < count($this->components); $i++) {
+                $component =  new VueComponent($this->components[$i]);
+                $components .= $component.',';
+            }
+            return substr($components, 0, strlen($components)-1);
         }
+
+        return;
     }
 
+    /**
+     * @return string
+     */
     public function generateWatch()
     {
         if (is_array($this->watch) && !empty($this->watch)) {
             $str = '';
             foreach ($this->watch as $key => $value) {
-                if ($value instanceof \yii\web\JsExpression) {
+                if ($value instanceof JsExpression) {
                     $str .= $key . ":" . $value->expression . (substr($value->expression, 1) == ',' ?: '');
                 }
             }
@@ -264,12 +292,15 @@ class Vue extends \yii\base\Widget
         }
     }
 
+    /**
+     * @return string
+     */
     public function generateComputed()
     {
         if (is_array($this->computed) && !empty($this->computed)) {
             $str = '';
             foreach ($this->computed as $key => $value) {
-                if ($value instanceof \yii\web\JsExpression) {
+                if ($value instanceof JsExpression) {
                     $str .= $key . ":" . $value->expression . (substr($value->expression, 1) == ',' ?: '');
                 }
             }
@@ -279,8 +310,11 @@ class Vue extends \yii\base\Widget
         }
     }
 
-    public function component($tagName, $option)
-    {
+    /**
+     * @param $tagName
+     * @param $option
+     */
+    public function component($tagName, $option) {
         $option = json_encode($option);
         $this->view->registerJs("
             Vue.component($tagName, $option);
