@@ -27,7 +27,7 @@ class Vue extends Widget
 
     /**
      *
-     * @var Array
+     * @var array
      */
     public $data;
 

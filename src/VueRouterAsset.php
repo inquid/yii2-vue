@@ -10,7 +10,7 @@ use yii\web\AssetBundle;
  */
 class VueRouterAsset extends AssetBundle
 {
-    public $baseUrl = 'https://cdn.jsdelivr.net/npm/vue/dist/';
+    public $baseUrl = 'https://unpkg.com/vue-router/dist/';
 
     public $js = [];
 
