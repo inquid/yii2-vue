@@ -20,6 +20,10 @@ class Vue extends Widget
      */
     public $jsName = 'app';
 
+
+    /** @var bool If enabled: generated js app will be saved on local disk, it'll also be saved in logs */
+    public $debugMode;
+
     /**
      * @see VueRouter
      */
@@ -151,6 +155,7 @@ class Vue extends Widget
             $this->view->registerAssetBundle(VueRouterAsset::className());
         }
 
+        $this->debugMode = YII_DEBUG ?? false;
     }
 
     public static function begin($config = array(), BasePluginProvider $pluginProvider = null)
@@ -215,9 +220,18 @@ class Vue extends Widget
                 },
             }); 
         ";
-        Yii::debug($js);
-        Yii::debug('components ' . json_encode($this->generateComponents()));
+        !$this->debugMode ?: $this->saveDebugData($js);
         Yii::$app->view->registerJs($js, View::POS_END);
+    }
+
+    /**
+     * Method to save the generated app into a file and log.
+     *
+     * @var $js string javascript generated application
+     */
+    public function saveDebugData(string $js){
+        Yii::debug($js);
+        file_put_contents("{$this->jsName}.js", $js);
     }
 
     public function generateData()
