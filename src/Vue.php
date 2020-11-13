@@ -188,6 +188,7 @@ class Vue extends Widget
         $computed = $this->generateComputed();
         $el = $this->id;
         $js = "
+            Vue.use(BootstrapVue);
             ".(($this->vueRouter) ? $this->vueRouter:null)."
             var {$this->jsName} = new Vue({
                 el: '#" . $el . "',
