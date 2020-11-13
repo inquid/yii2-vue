@@ -191,6 +191,7 @@ class Vue extends Widget
             ".(($this->vueRouter) ? $this->vueRouter:null)."
             var {$this->jsName} = new Vue({
                 el: '#" . $el . "',
+                " . (($this->vueRouter) ? "router," : null) . "
                 " . (!empty($this->template) ? "template :'" . $this->template . "'," : null) . "
                 " . (!empty($components) ? "components :" . $components . "," : null) . "
                 " . (!empty($data) ? "data :" . $data . "," : null) . "
