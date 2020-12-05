@@ -24,7 +24,23 @@ class PluginService
      */
     public function __construct()
     {
+        
+    }
 
+    /**
+     * Reads all the properties from a array of plugins and merge them into the given array.
+     * 
+     * @param array $config
+     * @param array $plugins
+     * @return array
+     */
+    public function loadPlugins(array $config, array $plugins): array
+    {
+        foreach ($plugins as $plugin) {
+            $config = $this->loadPropertiesFromPlugin($config, $plugin);
+        }
+
+        return $config;
     }
 
     /**
@@ -38,11 +54,11 @@ class PluginService
     public function loadPropertiesFromPlugin(array $defaultMethodProvider, PluginContract $pluginMethod): array
     {
         foreach ($this->reserverdKeys as $reserverdKey) {
-            if(!isset($defaultMethodProvider[$reserverdKey])){
+            if (!isset($defaultMethodProvider[$reserverdKey])) {
                 continue;
             }
 
-            $method = 'get'.ucfirst($reserverdKey);
+            $method = 'get' . ucfirst($reserverdKey);
             $defaultMethodProvider[$reserverdKey] = array_merge(
                 $defaultMethodProvider[$reserverdKey],
                 $pluginMethod->{$method}()
