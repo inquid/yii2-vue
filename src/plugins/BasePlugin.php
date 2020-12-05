@@ -33,6 +33,14 @@ class BasePlugin implements PluginContract
     /**
      * {@inheritDoc}
      */
+    public function htmlCode(): string
+    {
+        return '<div>code</div>';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function processServerSideCode(array $config): bool
     {
         return true;
