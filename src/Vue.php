@@ -230,8 +230,7 @@ class Vue extends Widget
      * @var $js string javascript generated application
      */
     public function saveDebugData(string $js){
-        Yii::debug($js);
-        file_put_contents("tmp/{$this->jsName}.js", $js);
+        Yii::debug($js, 'debug');
     }
 
     public function generateData()
