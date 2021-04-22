@@ -2,6 +2,7 @@
 
 namespace inquid\vue;
 
+use inquid\vue\classes\Mounted;
 use inquid\vue\plugins\BasePluginProvider;
 use Yii;
 use yii\base\Widget;
@@ -158,13 +159,14 @@ class Vue extends Widget
         $this->debugMode = YII_DEBUG ?? false;
     }
 
-    public static function begin($config = array(), BasePluginProvider $pluginProvider = null)
+    public static function begin($config = [], BasePluginProvider $pluginProvider = null)
     {
         if ($pluginProvider === null) {
             $pluginProvider = new BasePluginProvider();
         }
 
         $config = $pluginProvider->loadPlugins($config);
+        $config['mounted'] = (new Mounted())->formatJsExpression([$config['mounted']]);
         $obj = parent::begin($config);
         echo '<div id="' . $obj->id . '">';
 

@@ -12,6 +12,7 @@ class PluginService
     /** @var array Vue reserved props */
     protected $reserverdKeys = [
         'data',
+        'mounted',
         'methods',
         'computed',
         'watch',
@@ -59,10 +60,19 @@ class PluginService
             }
 
             $method = 'get' . ucfirst($reserverdKey);
-            $defaultMethodProvider[$reserverdKey] = array_merge(
-                $defaultMethodProvider[$reserverdKey],
-                $pluginMethod->{$method}()
-            );
+
+            if (
+                is_array($defaultMethodProvider[$reserverdKey]) &&
+                is_array($pluginMethod->{$method}())
+            ) {
+                $defaultMethodProvider[$reserverdKey] = array_merge(
+                    $defaultMethodProvider[$reserverdKey],
+                    $pluginMethod->{$method}()
+                );
+            } else {
+                $defaultMethodProvider[$reserverdKey] .=
+                    ' ' . $pluginMethod->{$method}();
+            }
         }
 
         return $defaultMethodProvider;

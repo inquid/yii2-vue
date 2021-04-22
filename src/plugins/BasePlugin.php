@@ -49,9 +49,9 @@ class BasePlugin implements PluginContract
     /**
      * {@inheritDoc}
      */
-    public function getMounted(): array
+    public function getMounted(): string
     {
-        return [];
+        return '';
     }
 
     /**

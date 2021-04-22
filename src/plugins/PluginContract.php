@@ -39,9 +39,9 @@ interface PluginContract
     /**
      * Get the mounted method for the vue application.
      *
-     * @return array
+     * @return string
      */
-    public function getMounted(): array;
+    public function getMounted(): string;
 
     /**
      * Get the computed method for the vue application.
