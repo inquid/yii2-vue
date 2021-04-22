@@ -166,7 +166,9 @@ class Vue extends Widget
         }
 
         $config = $pluginProvider->loadPlugins($config);
-        $config['mounted'] = (new Mounted())->formatJsExpression([$config['mounted']]);
+        if (isset($config['mounted'])) {
+            $config['mounted'] = (new Mounted())->formatJsExpression([$config['mounted']]);
+        }
         $obj = parent::begin($config);
         echo '<div id="' . $obj->id . '">';
 
