@@ -9,6 +9,7 @@ interface VueJsExpressionContract
 {
     /**
      * @param array $expressions
+     * @return JsExpression
      */
     public function formatJsExpression(array $expressions): JsExpression;
 

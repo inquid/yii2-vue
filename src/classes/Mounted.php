@@ -7,7 +7,7 @@ use yii\web\JsExpression;
 class Mounted implements VueJsExpressionContract
 {
     /**
-     * @param array $expressions
+     * @inheritdoc
      */
     public function formatJsExpression(array $expressions): JsExpression
     {

@@ -1,3 +1,10 @@
+# IDE
+/.idea
+
+# vendor folder
+/vendor
+composer.lock
+
 # node_modules
 /node_modules
 

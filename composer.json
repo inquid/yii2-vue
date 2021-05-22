@@ -1,21 +1,49 @@
 {
-    "name": "inquid/yii2-vue",
-    "description": "Vue for yii2 web application",
-    "type": "yii2-extension",
-    "keywords": ["yii2","vue"," yii2-vue"," yii2"," vuejs","inquid"," vue.js"],
-    "license": "LGPL-3.0+",
-    "authors": [
-        {
-            "name": "Inquid",
-            "email": "contact@inquid.co"
-        }
-    ],
-    "require": {
-        "yiisoft/yii2": "*"
-    },
-    "autoload": {
-        "psr-4": {
-            "inquid\\vue\\": "src"
-        }
+  "name": "inquid/yii2-vue",
+  "description": "Vue for yii2 web application",
+  "type": "yii2-extension",
+  "keywords": [
+    "yii2",
+    "vue",
+    " yii2-vue",
+    " yii2",
+    " vuejs",
+    "inquid",
+    " vue.js"
+  ],
+  "license": "LGPL-3.0+",
+  "authors": [
+    {
+      "name": "Inquid",
+      "email": "contact@inquid.co"
     }
+  ],
+  "require": {
+    "yiisoft/yii2": "~2.0.0",
+    "ext-json": "*"
+  },
+  "config": {
+    "platform": {
+      "php": "7.3.24"
+    },
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "extra": {
+    "composer-normalize": {
+      "indent-size": 2,
+      "indent-style": "space"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "inquid\\vue\\": "src"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ]
 }

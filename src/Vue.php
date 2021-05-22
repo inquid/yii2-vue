@@ -5,7 +5,9 @@ namespace inquid\vue;
 use inquid\vue\classes\Mounted;
 use inquid\vue\plugins\BasePluginProvider;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Widget;
+use yii\composer\Plugin;
 use yii\web\JsExpression;
 use yii\web\View;
 
@@ -13,6 +15,7 @@ Yii::setAlias('@vueroot', dirname(__FILE__));
 
 /**
  * @author akbar joudi <akbar.joody@gmail.com>
+ * @author INQUID LLC <contact@inquid.co>
  */
 class Vue extends Widget
 {
@@ -47,7 +50,7 @@ class Vue extends Widget
      *      . "this.message =1; "
      *      . "}"),
      *  ]
-     * @var Array
+     * @var array
      */
     public $methods;
 
@@ -55,7 +58,7 @@ class Vue extends Widget
      * 'components' => [
      *      ['name' => 'component'],
      *  ]
-     * @var Array
+     * @var array
      */
     public $components;
 
@@ -65,19 +68,19 @@ class Vue extends Widget
      *      . "this.message =1; "
      *      . "}"),
      *  ]
-     * @var Array
+     * @var array
      */
     public $filters;
 
     /**
      *
-     * @var Array
+     * @var array
      */
     public $watch;
 
     /**
      *
-     * @var Array
+     * @var array
      */
     public $computed;
 
@@ -141,19 +144,24 @@ class Vue extends Widget
      */
     public $destroyed;
 
-    /** @var Plugins[] $plugins */
+    /** @var Plugin[] $plugins */
     public $plugins;
 
 
+    /**
+     * {@inheritdoc}
+     * @throws InvalidConfigException
+     */
     public function init()
     {
         $this->view->registerAssetBundle(VueAsset::class);
         $this->view->registerAssetBundle(AxiosAsset::class);
         $this->view->registerAssetBundle(VueFormGeneratorAsset::class);
+        $this->view->registerAssetBundle(VueFormGeneratorFieldArrayAsset::class);
         $this->view->registerAssetBundle(VueBootstrapAsset::class);
         if($this->vueRouter)
         {
-            $this->view->registerAssetBundle(VueRouterAsset::className());
+            $this->view->registerAssetBundle(VueRouterAsset::class);
         }
 
         $this->debugMode = YII_DEBUG ?? false;
@@ -184,10 +192,10 @@ class Vue extends Widget
 
     public function run()
     {
-        return $this->renderVuejs();
+        $this->renderVueJs();
     }
 
-    public function renderVuejs()
+    public function renderVueJs()
     {
         $data = $this->generateData();
         $methods = $this->generateMethods();
@@ -220,7 +228,8 @@ class Vue extends Widget
                 " . (!empty($this->activated) ? "activated :" . $this->activated->expression . "," : null) . "
                 " . (!empty($this->deactivated) ? "deactivated :" . $this->deactivated->expression . "," : null) . "
                 components: {
-                    \"vue-form-generator\": VueFormGenerator.component
+                    'vue-form-generator': VueFormGenerator.component,
+                    'field-array': VueFormGenerator.FieldArray
                 },
             }); 
         ";
@@ -233,18 +242,24 @@ class Vue extends Widget
      *
      * @var $js string javascript generated application
      */
-    public function saveDebugData(string $js){
+    public function saveDebugData(string $js): void
+    {
         Yii::debug($js, 'debug');
     }
 
+    /**
+     * @return false|string
+     */
     public function generateData()
     {
         if (!empty($this->data)) {
             return json_encode($this->data);
         }
+
+        return '';
     }
 
-    public function generateMethods()
+    public function generateMethods(): string
     {
         if (is_array($this->methods) && !empty($this->methods)) {
             $str = '';
@@ -254,12 +269,17 @@ class Vue extends Widget
                 }
             }
             $str = rtrim($str,',');
-            
+
             return "{" . $str . "}";
         }
+
+        return '';
     }
 
-    public function generateFilters()
+    /**
+     * @return string
+     */
+    public function generateFilters(): string
     {
         if (is_array($this->filters) && !empty($this->filters)) {
             $str = '';
@@ -269,9 +289,11 @@ class Vue extends Widget
                 }
             }
             $str = rtrim($str,',');
-            
+
             return "{" . $str . "}";
         }
+
+        return '';
     }
 
     /**
@@ -279,7 +301,8 @@ class Vue extends Widget
      *
      * @return string
      */
-    public function generateComponents() {
+    public function generateComponents(): string
+    {
         if(!empty($this->components))
         {
             $components='';
@@ -290,13 +313,13 @@ class Vue extends Widget
             return substr($components, 0, strlen($components)-1);
         }
 
-        return;
+        return '';
     }
 
     /**
      * @return string
      */
-    public function generateWatch()
+    public function generateWatch(): string
     {
         if (is_array($this->watch) && !empty($this->watch)) {
             $str = '';
@@ -306,15 +329,17 @@ class Vue extends Widget
                 }
             }
             $str = rtrim($str,',');
-            
+
             return "{" . $str . "}";
         }
+
+        return '';
     }
 
     /**
      * @return string
      */
-    public function generateComputed()
+    public function generateComputed(): string
     {
         if (is_array($this->computed) && !empty($this->computed)) {
             $str = '';
@@ -324,9 +349,11 @@ class Vue extends Widget
                 }
             }
             $str = rtrim($str,',');
-            
+
             return "{" . $str . "}";
         }
+
+        return '';
     }
 
     /**
