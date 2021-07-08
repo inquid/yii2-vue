@@ -72,6 +72,13 @@ interface PluginContract
     public function getComponents(): array;
 
     /**
+     * You can also predefine the necessary html code in here to run the plugin.
+     *
+     * @return string
+     */
+    public function htmlCode(): string;
+
+    /**
      * Code to be executed when the result is being sent to the server.
      *
      * @param array $request the request to be processed.
